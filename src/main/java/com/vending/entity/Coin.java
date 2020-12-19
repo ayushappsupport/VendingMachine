@@ -9,7 +9,9 @@ import javax.persistence.ManyToOne;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
- * Created by Lloyd on 02/11/2017.
+ * 
+ * @author ayush.a.mittal
+ *
  */
 @Entity
 public class Coin {

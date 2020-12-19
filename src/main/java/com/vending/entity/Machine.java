@@ -8,13 +8,13 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Created by Lloyd on 01/11/2017.
+ * 
+ * @author ayush.a.mittal
+ *
  */
 @Entity
 public class Machine {
 
-    @OneToMany(mappedBy = "machine")
-    private Set<Product> productList = new HashSet<>();
 
     @OneToMany(mappedBy = "machine")
     private Set<Coin> coinsList = new HashSet<>();
@@ -30,12 +30,6 @@ public class Machine {
         return id;
     }
 
-    /** Get the products available
-     * @return all the products in the system
-     */
-    public Set<Product> getProducts() {
-        return productList;
-    }
 
     /** Machine constructor
      * @param name the name of the vending machine
