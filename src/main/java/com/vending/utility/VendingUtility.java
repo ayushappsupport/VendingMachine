@@ -44,6 +44,7 @@ public class VendingUtility {
 			Map<Integer, String> coinPresentMap,IVendingServiceData vendingServiceData) {
 		Coin coinToPersist=null;
 		for (Coin coin : coins) {
+			if(validateCoin(coin)) {
     		if (IntStream.of(Coin.POSSIBLE_VALUES).anyMatch(x -> x == coin.denomination)) {
     			if(!coinPresentMap.containsKey(coin.denomination)) {
     			machine.currentAmount=machine.currentAmount+(coin.denomination*coin.count);
@@ -57,6 +58,15 @@ public class VendingUtility {
     			}
     			
             }
-		}
+		}}
 	}
-}
+	
+	public static boolean validateCoin(Coin coin) {
+		if(coin.count>=0 && coin.count % 1 == 0) {
+			return true;
+		}
+		return false;
+	}
+	
+	}
+

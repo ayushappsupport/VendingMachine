@@ -10,6 +10,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,8 +34,9 @@ import com.vending.service.IVendingServiceData;
  * @author ayush.a.mittal
  *
  */
+@CrossOrigin(origins = {"http://localhost:3000"})
 @RestController
-@RequestMapping("/{machineId}/coins")
+@RequestMapping("/machine/{machineId}/coins")
 public class CoinsRestController {
 
 	private final MachineRepository machineRepository;
@@ -103,7 +106,7 @@ public class CoinsRestController {
 	 * @return
 	 */
 	@RequestMapping(method = RequestMethod.POST, value = "/addInitialCoins")
-	ResponseEntity<?> addInitialCoin(@PathVariable String machineId, @RequestBody List<Coin> coins) {
+	ResponseEntity<?> addInitialCoin(@PathVariable String machineId,@Validated @RequestBody List<Coin> coins) {
 		logger.debug("Entering into POST Method of setting up Inital coins in the machine");
 		return new ResponseEntity<>(vendingService.addInitialCoins(machineId, coins), HttpStatus.CREATED);
 	}
