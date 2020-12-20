@@ -12,6 +12,7 @@ import java.util.stream.IntStream;
 import com.vending.entity.Coin;
 import com.vending.entity.Machine;
 import com.vending.repository.CoinRepository;
+import com.vending.service.IVendingServiceData;
 
 /**
  * @author ayush.a.mittal
@@ -40,19 +41,19 @@ public class VendingUtility {
 	 * @param coinPresentMap
 	 */
 	public static void getResultCoins(List<Coin> coins, List<Coin> resultCoins, Machine machine,
-			Map<Integer, String> coinPresentMap,CoinRepository coinRepo) {
+			Map<Integer, String> coinPresentMap,IVendingServiceData vendingServiceData) {
 		Coin coinToPersist=null;
 		for (Coin coin : coins) {
     		if (IntStream.of(Coin.POSSIBLE_VALUES).anyMatch(x -> x == coin.denomination)) {
     			if(!coinPresentMap.containsKey(coin.denomination)) {
     			machine.currentAmount=machine.currentAmount+(coin.denomination*coin.count);
-    			resultCoins.add(coinRepo.save(new Coin(machine,coin.denomination, coin.count)));
+    			resultCoins.add(vendingServiceData.saveCoin(new Coin(machine,coin.denomination, coin.count)));
     			}else {
     				machine.currentAmount=machine.currentAmount+(coin.denomination*coin.count);
     				String keySplit[]=coinPresentMap.get(coin.denomination).split(",");
-    				coinToPersist=coinRepo.getOne(Long.valueOf((keySplit[1])));
+    				coinToPersist=vendingServiceData.getOneCoin(Long.valueOf((keySplit[1])));
     				coinToPersist.count=coinToPersist.count+coin.count;
-    				resultCoins.add(coinRepo.save(coinToPersist));
+    				resultCoins.add(vendingServiceData.saveCoin(coinToPersist));
     			}
     			
             }

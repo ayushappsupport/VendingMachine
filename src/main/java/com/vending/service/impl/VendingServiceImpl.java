@@ -20,6 +20,7 @@ import com.vending.exception.UserServiceException;
 import com.vending.repository.CoinRepository;
 import com.vending.repository.MachineRepository;
 import com.vending.service.IVendingService;
+import com.vending.service.IVendingServiceData;
 import com.vending.utility.VendingUtility;
 
 /**
@@ -30,27 +31,31 @@ import com.vending.utility.VendingUtility;
 @Service
 public class VendingServiceImpl implements IVendingService {
 
+	/*
+	 * @Autowired private MachineRepository machineRepo;
+	 * 
+	 * @Autowired private CoinRepository coinRepo;
+	 * 
+	 * 
+	 */
 	@Autowired
-	private MachineRepository machineRepo;
-
-	@Autowired
-	private CoinRepository coinRepo;
+	private IVendingServiceData vendingServiceData;
 
 	@Override
 	public List<Coin> addInitialCoins(String machineId, List<Coin> coins) {
 		List<Coin> resultCoins = new ArrayList<Coin>();
 		Machine machine = null;
 		try {
-			Optional<Machine> machineopt = machineRepo.findByName(machineId);
+			Optional<Machine> machineopt = vendingServiceData.findByName(machineId);
 			if (machineopt.isPresent()) {
 				machine = machineopt.get();
 			} else {
 				machine = new Machine(machineId, 0);
 			}
-			Collection<Coin> coinsPresent = coinRepo.findByMachineName(machineId);
+			Collection<Coin> coinsPresent = vendingServiceData.findByMachineName(machineId);
 			Map<Integer, String> coinPresentMap = VendingUtility.getCoinsMap(coinsPresent);
-			VendingUtility.getResultCoins(coins, resultCoins, machine, coinPresentMap, coinRepo);
-			machineRepo.save(machine);
+			VendingUtility.getResultCoins(coins, resultCoins, machine, coinPresentMap, vendingServiceData);
+			vendingServiceData.saveMachine(machine);
 			
 		} catch (NumberFormatException ex) {
 			throw new UserServiceException("Exception in NumberFormatting");
@@ -71,18 +76,18 @@ public class VendingServiceImpl implements IVendingService {
 	public Optional<Machine> addCoin(String machineId, Coin coin, Machine machine) throws Exception {
 		final boolean[] coinFound = { false };
 		// Increase the amount of coins if the machine already has seen that coin
-		coinRepo.findByMachineName(machineId).forEach(machineCoin -> {
+		vendingServiceData.findByMachineName(machineId).forEach(machineCoin -> {
 			if (coin.denomination == machineCoin.denomination) {
 				machineCoin.count = machineCoin.count + 1;
 				// coin.setId(machineCoin.getId());
 				coinFound[0] = true;
-				coinRepo.save(machineCoin);
+				vendingServiceData.saveCoin(machineCoin);
 			}
 		});
 
 		// Else add the coin to the repository
 		if (!coinFound[0] && IntStream.of(Coin.POSSIBLE_VALUES).anyMatch(x -> x == coin.denomination)) {
-			coinRepo.saveAndFlush(new Coin(machine, coin.denomination, 1));
+			vendingServiceData.saveAndFlushCoin((new Coin(machine, coin.denomination, 1)));
 			coinFound[0] = true;
 		}
 
@@ -90,9 +95,9 @@ public class VendingServiceImpl implements IVendingService {
 			machine.currentAmount += coin.denomination;
 		}
 
-		machineRepo.saveAndFlush(machine);
+		vendingServiceData.saveAndFlushMachine(machine);
 
-		return machineRepo.findByName(machineId);
+		return vendingServiceData.findByName(machineId);
 	}
 
 	@Override
@@ -107,7 +112,7 @@ public class VendingServiceImpl implements IVendingService {
 		try {
 		final int[] refundTotal = new int[1];
 		refundTotal[0] = refund.getRefundAmount();
-		Machine machine = machineRepo.findByName(machineId).get();
+		Machine machine = vendingServiceData.findByName(machineId).get();
 		int initialMachineAmount = machine.currentAmount;
 		if (refundTotal[0] > initialMachineAmount) {
 			throw new UserServiceException("Refund Cannot be completed as Insufficient Coins are there");
@@ -117,7 +122,7 @@ public class VendingServiceImpl implements IVendingService {
 
 		//
 		for (int value : Coin.POSSIBLE_VALUES) {
-			coinRepo.findByMachineName(machineId).forEach(coin -> {
+			vendingServiceData.findByMachineName(machineId).forEach(coin -> {
 				if (value == coin.denomination && coin.count > 0 && coin.denomination <= refundTotal[0]) {
 					double max_coins = Math.min(Math.floor(refundTotal[0] / coin.denomination), coin.count);
 					coin.count -= max_coins;
@@ -132,8 +137,8 @@ public class VendingServiceImpl implements IVendingService {
 			throw new UserServiceException("Refund Cannot be completed as Insufficient Coins are there");
 		} else {
 			machine.currentAmount = machine.currentAmount - refund.getRefundAmount();
-			coinRepo.saveAll(coinsToSave);
-			machineRepo.save(machine);
+			vendingServiceData.saveCoinBulk(coinsToSave);
+			vendingServiceData.saveMachine(machine);
 		}
 		}
 		catch(Exception e) {

@@ -25,6 +25,7 @@ import com.vending.exception.UserServiceException;
 import com.vending.repository.CoinRepository;
 import com.vending.repository.MachineRepository;
 import com.vending.service.IVendingService;
+import com.vending.service.IVendingServiceData;
 
 /**
  * 
@@ -39,6 +40,7 @@ public class CoinsRestController {
 	private final CoinRepository coinRepository;
 
 	private IVendingService vendingService;
+	private IVendingServiceData vendingServiceData;
 	Logger logger = LoggerFactory.getLogger(CoinsRestController.class);
 	/**
 	 * Coins Rest Controller constructor
@@ -48,10 +50,11 @@ public class CoinsRestController {
 	 * @param coinRepository    coin repository
 	 */
 	@Autowired
-	CoinsRestController(MachineRepository machineRepository, CoinRepository coinRepository,IVendingService vendingService) {
+	CoinsRestController(MachineRepository machineRepository, CoinRepository coinRepository,IVendingService vendingService,IVendingServiceData vendingServiceData) {
 		this.machineRepository = machineRepository;
 		this.coinRepository = coinRepository;
 		this.vendingService=vendingService;
+		this.vendingServiceData=vendingServiceData;
 	}
 
 	/**
@@ -65,7 +68,7 @@ public class CoinsRestController {
 		logger.debug("Entering into GET Method of coins");
 		validateMachine(machineId);
 		logger.debug("Exiting from GET Method of coins");
-		return coinRepository.findByMachineName(machineId);
+		return vendingServiceData.findByMachineName(machineId);
 		
 	}
 

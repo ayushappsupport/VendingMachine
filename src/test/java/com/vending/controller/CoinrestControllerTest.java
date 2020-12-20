@@ -29,6 +29,7 @@ import com.vending.entity.Coin;
 import com.vending.entity.Machine;
 import com.vending.repository.CoinRepository;
 import com.vending.repository.MachineRepository;
+import com.vending.service.impl.VendingServiceDataImpl;
 import com.vending.service.impl.VendingServiceImpl;
 
 /**
@@ -52,6 +53,9 @@ public class CoinrestControllerTest {
 	private CoinRepository coinRepository;
 	
 	@Mock
+	private VendingServiceDataImpl vendingServiceData;
+	
+	@Mock
 	private VendingServiceImpl vendingService;
 	
 	private Machine machine = new Machine();
@@ -70,7 +74,7 @@ public class CoinrestControllerTest {
 	@Test
 	public void getCoinsTest() throws Exception {
 		Mockito.<Optional<Machine>>when(machineRepository.findByName(Mockito.anyString())).thenReturn(Optional.of(machine));
-		Mockito.when(coinRepository.findByMachineName(Mockito.any())).thenReturn(new ArrayList<Coin>());
+		Mockito.when(vendingServiceData.findByMachineName(Mockito.any())).thenReturn(new ArrayList<Coin>());
 		 this.mockMvc.perform(MockMvcRequestBuilders.get("/1/coins")
 		           .accept(MediaType.parseMediaType("application/json")))
 		           .andExpect(status().isOk())
