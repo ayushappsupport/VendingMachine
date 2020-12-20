@@ -141,6 +141,9 @@ public class VendingServiceImpl implements IVendingService {
 			vendingServiceData.saveMachine(machine);
 		}
 		}
+		catch(UserServiceException e) {
+			throw new UserServiceException(e.getLocalizedMessage());
+		}
 		catch(Exception e) {
 			throw new UserServiceException("Generic Error");
 		}
