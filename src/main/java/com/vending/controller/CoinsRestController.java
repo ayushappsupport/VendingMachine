@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,7 +39,7 @@ public class CoinsRestController {
 	private final CoinRepository coinRepository;
 
 	private IVendingService vendingService;
-
+	Logger logger = LoggerFactory.getLogger(CoinsRestController.class);
 	/**
 	 * Coins Rest Controller constructor
 	 *
@@ -60,8 +62,11 @@ public class CoinsRestController {
 	 */
 	@RequestMapping(method = RequestMethod.GET)
 	Collection<Coin> getCoins(@PathVariable String machineId) {
+		logger.debug("Entering into GET Method of coins");
 		validateMachine(machineId);
+		logger.debug("Exiting from GET Method of coins");
 		return coinRepository.findByMachineName(machineId);
+		
 	}
 
 	/**
@@ -73,6 +78,7 @@ public class CoinsRestController {
 	 */
 	@RequestMapping(method = RequestMethod.POST, value = "/addCoins")
 	Optional<?> addCoin(@PathVariable String machineId, @RequestBody Coin coin) throws Exception {
+		logger.debug("Entering into POST Method of adding coins in the machine");
 		validateMachine(machineId);
 		if(!IntStream.of(Coin.POSSIBLE_VALUES).anyMatch(x -> x == coin.denomination)) {
 			throw new BadRequestException("Not a Valid Denomination");
@@ -95,6 +101,7 @@ public class CoinsRestController {
 	 */
 	@RequestMapping(method = RequestMethod.POST, value = "/addInitialCoins")
 	ResponseEntity<?> addInitialCoin(@PathVariable String machineId, @RequestBody List<Coin> coins) {
+		logger.debug("Entering into POST Method of setting up Inital coins in the machine");
 		return new ResponseEntity<>(vendingService.addInitialCoins(machineId, coins), HttpStatus.CREATED);
 	}
 
@@ -141,6 +148,7 @@ public class CoinsRestController {
 	 * @param machineId the machine name
 	 */
 	private void validateMachine(String machineId) {
+		logger.debug("Entering into method validateMachine for machineId: " +machineId);
 		machineRepository.findByName(machineId).orElseThrow(() -> new MachineNotFoundException(machineId));
 	}
 }

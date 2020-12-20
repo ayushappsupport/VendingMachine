@@ -102,15 +102,17 @@ public class VendingServiceImpl implements IVendingService {
 	 * @return
 	 */
 	public List<Coin> refundAmount(String machineId, RefundAmount refund) throws UserServiceException,Exception {
+		
+		List<Coin> refundCoins = new ArrayList<>();
+		try {
 		final int[] refundTotal = new int[1];
 		refundTotal[0] = refund.getRefundAmount();
-
 		Machine machine = machineRepo.findByName(machineId).get();
 		int initialMachineAmount = machine.currentAmount;
 		if (refundTotal[0] > initialMachineAmount) {
 			throw new UserServiceException("Refund Cannot be completed as Insufficient Coins are there");
 		}
-		List<Coin> refundCoins = new ArrayList<>();
+		
 		List<Coin> coinsToSave = new ArrayList<Coin>();
 
 		//
@@ -132,6 +134,10 @@ public class VendingServiceImpl implements IVendingService {
 			machine.currentAmount = machine.currentAmount - refund.getRefundAmount();
 			coinRepo.saveAll(coinsToSave);
 			machineRepo.save(machine);
+		}
+		}
+		catch(Exception e) {
+			throw new UserServiceException("Generic Error");
 		}
 		return refundCoins;
 	}
