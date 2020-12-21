@@ -12,6 +12,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
+import com.vending.constants.VendingConstants;
 import com.vending.entity.Coin;
 import com.vending.entity.Machine;
 import com.vending.repository.CoinRepository;
@@ -31,7 +32,7 @@ public class VendingServiceDataImpl implements IVendingServiceData {
 	@Autowired
 	private MachineRepository machineRepo;
 
-	@Cacheable(value = "vendingmachine", key = "#name")
+	@Cacheable(value = VendingConstants.CACHE_VENDINGMACHINE, key = "#name")
 	@Override
 	public Collection<Coin> findByMachineName(String name) {
 		return coinRepo.findByMachineName(name);
@@ -54,7 +55,7 @@ public class VendingServiceDataImpl implements IVendingServiceData {
 	}
 
 	@Override
-	@CacheEvict(value="vendingmachine", key="#machine.name")
+	@CacheEvict(value=VendingConstants.CACHE_VENDINGMACHINE, key="#machine.name")
 	public void saveMachine(Machine machine) {
 		machineRepo.save(machine);
 		
@@ -67,7 +68,7 @@ public class VendingServiceDataImpl implements IVendingServiceData {
 	}
 
 	@Override
-	@CacheEvict(value="vendingmachine", key="#machine.name")
+	@CacheEvict(value=VendingConstants.CACHE_VENDINGMACHINE, key="#machine.name")
 	public void saveAndFlushMachine(Machine machine) {
 		machineRepo.saveAndFlush(machine);
 		

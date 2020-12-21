@@ -11,7 +11,6 @@ import java.util.stream.IntStream;
 
 import com.vending.entity.Coin;
 import com.vending.entity.Machine;
-import com.vending.repository.CoinRepository;
 import com.vending.service.IVendingServiceData;
 
 /**

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.vending.constants.VendingConstants;
 import com.vending.entity.Coin;
 import com.vending.entity.RefundAmount;
 import com.vending.exception.BadRequestException;
@@ -36,7 +37,7 @@ import com.vending.service.IVendingServiceData;
  */
 @CrossOrigin(origins = {"http://localhost:3000"})
 @RestController
-@RequestMapping("/machine/{machineId}/coins")
+@RequestMapping(VendingConstants.REQUEST_MAPPING)
 public class CoinsRestController {
 
 	private final MachineRepository machineRepository;
@@ -46,11 +47,12 @@ public class CoinsRestController {
 	private IVendingServiceData vendingServiceData;
 	Logger logger = LoggerFactory.getLogger(CoinsRestController.class);
 	/**
-	 * Coins Rest Controller constructor
-	 *
-	 * @param productRepository product repository
-	 * @param machineRepository machine repository
-	 * @param coinRepository    coin repository
+	 * To inject the bean
+	 * 
+	 * @param machineRepository
+	 * @param coinRepository
+	 * @param vendingService
+	 * @param vendingServiceData
 	 */
 	@Autowired
 	CoinsRestController(MachineRepository machineRepository, CoinRepository coinRepository,IVendingService vendingService,IVendingServiceData vendingServiceData) {
@@ -82,18 +84,18 @@ public class CoinsRestController {
 	 * @param coin      the coin you want to add
 	 * @return the machine that the coin was added
 	 */
-	@RequestMapping(method = RequestMethod.POST, value = "/addCoins")
+	@RequestMapping(method = RequestMethod.POST, value = VendingConstants.ADD_COINS)
 	Optional<?> addCoin(@PathVariable String machineId, @RequestBody Coin coin) throws Exception {
 		logger.debug("Entering into POST Method of adding coins in the machine");
 		validateMachine(machineId);
 		if(!IntStream.of(Coin.POSSIBLE_VALUES).anyMatch(x -> x == coin.denomination)) {
-			throw new BadRequestException("Not a Valid Denomination");
+			throw new BadRequestException(VendingConstants.NOT_A_VALID_DENOMINATION);
 		}
 		return machineRepository.findByName(machineId).map(machine -> {
 			try {
 				return vendingService.addCoin(machineId, coin, machine);
 			} catch (Exception e) {
-				throw new UserServiceException("Unexpected Error");
+				throw new UserServiceException(VendingConstants.UNEXPECTED_ERROR);
 			}
 		});
 	}
@@ -105,47 +107,24 @@ public class CoinsRestController {
 	 * @param coins
 	 * @return
 	 */
-	@RequestMapping(method = RequestMethod.POST, value = "/addInitialCoins")
+	@RequestMapping(method = RequestMethod.POST, value = VendingConstants.ADD_INITIAL_COINS)
 	ResponseEntity<?> addInitialCoin(@PathVariable String machineId,@Validated @RequestBody List<Coin> coins) {
 		logger.debug("Entering into POST Method of setting up Inital coins in the machine");
 		return new ResponseEntity<>(vendingService.addInitialCoins(machineId, coins), HttpStatus.CREATED);
 	}
 
 	/**
-	 * Return all the money that has not been spent in the system
+	 * Return all the money that has been requested for a refund
 	 *
 	 * @param machineId machine name
 	 * @return the list of coins that have been returned
 	 * @throws Exception 
 	 * @throws UserServiceException 
 	 */
-	@RequestMapping(method = RequestMethod.POST, value = "/refund")
+	@RequestMapping(method = RequestMethod.POST, value = VendingConstants.REFUND)
 	ResponseEntity<?> refund(@PathVariable String machineId, @RequestBody RefundAmount refund) throws UserServiceException, Exception {
 		this.validateMachine(machineId);
 		return new ResponseEntity<>(vendingService.refundAmount(machineId, refund), HttpStatus.CREATED);
-	}
-
-	/**
-	 * Get a specific coin
-	 *
-	 * @param machineId machine name
-	 * @param coinValue coin value
-	 * @return the details of coins in that vending machine
-	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/{coinValue}")
-	Coin getCoin(@PathVariable String machineId, @PathVariable int coinValue) {
-		this.validateMachine(machineId);
-		final Coin[] foundCoin = { null };
-		this.coinRepository.findByMachineName(machineId).forEach((Coin coin) -> {
-			if (coin.denomination == coinValue) {
-				foundCoin[0] = coin;
-			}
-		});
-		if (foundCoin[0] != null) {
-			return foundCoin[0];
-		} else {
-			throw new CoinNotFoundException(coinValue);
-		}
 	}
 
 	/**

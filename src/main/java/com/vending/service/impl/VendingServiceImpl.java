@@ -13,12 +13,11 @@ import java.util.stream.IntStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.vending.constants.VendingConstants;
 import com.vending.entity.Coin;
 import com.vending.entity.Machine;
 import com.vending.entity.RefundAmount;
 import com.vending.exception.UserServiceException;
-import com.vending.repository.CoinRepository;
-import com.vending.repository.MachineRepository;
 import com.vending.service.IVendingService;
 import com.vending.service.IVendingServiceData;
 import com.vending.utility.VendingUtility;
@@ -31,16 +30,18 @@ import com.vending.utility.VendingUtility;
 @Service
 public class VendingServiceImpl implements IVendingService {
 
-	/*
-	 * @Autowired private MachineRepository machineRepo;
-	 * 
-	 * @Autowired private CoinRepository coinRepo;
-	 * 
-	 * 
-	 */
 	@Autowired
 	private IVendingServiceData vendingServiceData;
-
+	
+	
+	/**
+	 * To add initial coins in the machine
+	 * 
+	 * @param machineId
+	 * @param list coin
+	 * @param machine
+	 * @return
+	 */
 	@Override
 	public List<Coin> addInitialCoins(String machineId, List<Coin> coins) {
 		List<Coin> resultCoins = new ArrayList<Coin>();
@@ -60,13 +61,15 @@ public class VendingServiceImpl implements IVendingService {
 		} catch (NumberFormatException ex) {
 			throw new UserServiceException("Exception in NumberFormatting");
 		} catch (Exception e) {
-			throw new UserServiceException("Generic Exception");
+			throw new UserServiceException(VendingConstants.UNEXPECTED_ERROR);
 		}
 		return resultCoins;
 	}
 
 	
 	/**
+	 * To add a coin in the machine
+	 * 
 	 * @param machineId
 	 * @param coin
 	 * @param machine
@@ -102,6 +105,8 @@ public class VendingServiceImpl implements IVendingService {
 
 	@Override
 	/**
+	 * To return the refund
+	 * 
 	 * @param machineId
 	 * @param refund
 	 * @return
@@ -115,7 +120,7 @@ public class VendingServiceImpl implements IVendingService {
 		Machine machine = vendingServiceData.findByName(machineId).get();
 		int initialMachineAmount = machine.currentAmount;
 		if (refundTotal[0] > initialMachineAmount) {
-			throw new UserServiceException("Refund Cannot be completed as Insufficient Coins are there");
+			throw new UserServiceException(VendingConstants.REFUND_ERROR);
 		}
 		
 		List<Coin> coinsToSave = new ArrayList<Coin>();
@@ -134,7 +139,7 @@ public class VendingServiceImpl implements IVendingService {
 			});
 		}
 		if (refundTotal[0] > 0) {
-			throw new UserServiceException("Refund Cannot be completed as Insufficient Coins are there");
+			throw new UserServiceException(VendingConstants.REFUND_ERROR);
 		} else {
 			machine.currentAmount = machine.currentAmount - refund.getRefundAmount();
 			vendingServiceData.saveCoinBulk(coinsToSave);
@@ -145,7 +150,7 @@ public class VendingServiceImpl implements IVendingService {
 			throw new UserServiceException(e.getLocalizedMessage());
 		}
 		catch(Exception e) {
-			throw new UserServiceException("Generic Error");
+			throw new UserServiceException(VendingConstants.UNEXPECTED_ERROR);
 		}
 		return refundCoins;
 	}

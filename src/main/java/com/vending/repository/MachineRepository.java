@@ -6,7 +6,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 /**
- * Created by Lloyd on 01/11/2017.
+ * 
+ * @author ayush.a.mittal
+ *
  */
 public interface MachineRepository extends JpaRepository<Machine, Long> {
     /**

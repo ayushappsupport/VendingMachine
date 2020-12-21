@@ -1,0 +1,126 @@
+{
+	"info": {
+		"_postman_id": "9efc9f15-e437-4fa6-b0ff-3ed46a9e7f8b",
+		"name": "Vending_Machine",
+		"description": "Postman Collection for Vending Machine",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Initialize Machine",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[\r\n   \r\n    {\"machine\":1,\"denomination\":10,\"count\":3},\r\n    {\"machine\":1,\"denomination\":20,\"count\":20},\r\n     {\"machine\":1,\"denomination\":200,\"count\":100}\r\n    ]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/machine/1/coins/addInitialCoins",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"machine",
+						"1",
+						"coins",
+						"addInitialCoins"
+					]
+				},
+				"description": "Request to set up the machine to a starting state with couns and count"
+			},
+			"response": []
+		},
+		{
+			"name": "GET Coins in a Machine",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/machine/1/coins",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"machine",
+						"1",
+						"coins"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST - Add Coin",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"denomination\":200}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/machine/1/coins/addCoins",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"machine",
+						"1",
+						"coins",
+						"addCoins"
+					]
+				},
+				"description": "Adding a single coin to a machine"
+			},
+			"response": []
+		},
+		{
+			"name": "POST - Refund",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"refundAmount\":3000}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/machine/1/coins/refund",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"machine",
+						"1",
+						"coins",
+						"refund"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

@@ -9,6 +9,8 @@ import org.springframework.cache.support.SimpleCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import com.vending.constants.VendingConstants;
+
 @Configuration
 @EnableCaching
 public class CachingConfig {
@@ -18,7 +20,7 @@ public class CachingConfig {
     public CacheManager cacheManager() {
         SimpleCacheManager cacheManager = new SimpleCacheManager();
         cacheManager.setCaches(Arrays.asList(
-          new ConcurrentMapCache("vendingmachine")
+          new ConcurrentMapCache(VendingConstants.CACHE_VENDINGMACHINE)
           ));
         return cacheManager;
     }
