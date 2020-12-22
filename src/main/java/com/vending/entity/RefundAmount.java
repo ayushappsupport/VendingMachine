@@ -1,20 +1,19 @@
 package com.vending.entity;
 
-import javax.persistence.Entity;
 import javax.persistence.Id;
 
-@Entity
+
 public class RefundAmount {
 	
 	@Id
-	public int refundAmount;
+	public int refundamountvalue;
 
 	public int getRefundAmount() {
-		return refundAmount;
+		return refundamountvalue;
 	}
 
-	public void setRefundAmount(int refundAmount) {
-		this.refundAmount = refundAmount;
+	public void setRefundAmount(int refundamountvalue) {
+		this.refundamountvalue = refundamountvalue;
 	}
 
 

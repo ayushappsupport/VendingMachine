@@ -1,7 +1,10 @@
 package com.vending.constants;
 
 public class VendingConstants {
-
+	
+	private VendingConstants() {
+		
+	}
 	
 	public static final String REQUEST_MAPPING="/machine/{machineId}/coins";
 	public static final String ADD_COINS="/addCoins";

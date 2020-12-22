@@ -19,14 +19,14 @@ public class Machine {
     @OneToMany(mappedBy = "machine")
     private Set<Coin> coinsList = new HashSet<>();
 
-    public String name;
-    public int currentAmount;
+    private String name;
+    private int currentAmount;
 
     @Id
     @GeneratedValue
     private Long id;
 
-    public Long getID() {
+    public Long getId() {
         return id;
     }
 
@@ -63,4 +63,26 @@ public class Machine {
     public int getCurrentAmount() {
         return currentAmount;
     }
+
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+
+	public void setCoinsList(Set<Coin> coinsList) {
+		this.coinsList = coinsList;
+	}
+
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+
+	public void setCurrentAmount(int currentAmount) {
+		this.currentAmount = currentAmount;
+	}
+    
+    
 }

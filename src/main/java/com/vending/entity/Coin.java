@@ -5,10 +5,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-
-import org.springframework.lang.NonNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -46,8 +42,8 @@ public class Coin {
     }
 
 
-    public int denomination;
-    public int count;
+    private int denomination;
+    private int count;
 
     /** Get the value of the type of coin
      * @return the value (e.g. 50 = 50p , 200 = £2)
@@ -88,4 +84,22 @@ public class Coin {
     public Coin(){
         //jpa only
     }
+
+	public Machine getMachine() {
+		return machine;
+	}
+
+	public void setMachine(Machine machine) {
+		this.machine = machine;
+	}
+
+	public void setDenomination(int denomination) {
+		this.denomination = denomination;
+	}
+
+	public void setCount(int count) {
+		this.count = count;
+	}
+    
+    
 }

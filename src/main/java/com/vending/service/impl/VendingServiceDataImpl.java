@@ -81,8 +81,12 @@ public class VendingServiceDataImpl implements IVendingServiceData {
 	}
 
 	@Override
-	public Coin getOneCoin(Long Id) {
-		return coinRepo.findById(Id).get();
+	public Coin getOneCoin(Long id) {
+		Optional<Coin> coin=coinRepo.findById(id);
+		if(coin.isPresent()) {
+			return coin.get();
+		}
+		return null;
 	}
 
 }

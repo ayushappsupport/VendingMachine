@@ -71,5 +71,5 @@ public interface IVendingServiceData {
      * @param Id
      * @return
      */
-    Coin getOneCoin(Long Id);
+    Coin getOneCoin(Long id);
 }

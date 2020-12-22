@@ -95,7 +95,7 @@ public class CoinrestControllerTest {
 	public void addCoinsTest() throws Exception {
 		Mockito.<Optional<Machine>>when(machineRepository.findByName(Mockito.anyString())).thenReturn(Optional.of(machine));
 		Coin coin=new Coin();
-		coin.denomination=200;
+		coin.setDenomination(200);
 		Mockito.when(vendingService.addCoin(Mockito.anyString(), Mockito.any(),Mockito.any())).thenReturn(Optional.of(machine));
 		 this.mockMvc.perform(MockMvcRequestBuilders.post("/machine/1/coins/addCoins")
 				 	.contentType(MediaType.APPLICATION_JSON)
@@ -109,7 +109,7 @@ public class CoinrestControllerTest {
 	public void addCoinsNotValidDenominationTest() throws Exception {
 		Mockito.<Optional<Machine>>when(machineRepository.findByName(Mockito.anyString())).thenReturn(Optional.of(machine));
 		Coin coin=new Coin();
-		coin.denomination=135;
+		coin.setDenomination(135);
 		this.mockMvc.perform(MockMvcRequestBuilders.post("/machine/1/coins/addCoins")
 				 	.contentType(MediaType.APPLICATION_JSON)
 				   .content(mapper.writeValueAsString(coin))

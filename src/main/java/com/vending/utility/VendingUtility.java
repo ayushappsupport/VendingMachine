@@ -18,6 +18,10 @@ import com.vending.service.IVendingServiceData;
  *
  */
 public class VendingUtility {
+	
+	private VendingUtility() {
+		
+	}
 
 	/**
 	 * To get a Map of current Coins
@@ -26,9 +30,9 @@ public class VendingUtility {
 	 * @return 
 	 */
 	public static Map<Integer, String> getCoinsMap(Collection<Coin> coinsPresent) {
-		Map<Integer, String> coinPresentMap=new HashMap<Integer, String>();
+		Map<Integer, String> coinPresentMap=new HashMap<>();
 		for(Coin coinsP: coinsPresent) {
-    		coinPresentMap.put(coinsP.denomination, coinsP.count+","+coinsP.getId());
+    		coinPresentMap.put(coinsP.getDenomination(), coinsP.getCount()+","+coinsP.getId());
     	}
 		return coinPresentMap;
 	}
@@ -44,15 +48,15 @@ public class VendingUtility {
 		Coin coinToPersist=null;
 		for (Coin coin : coins) {
 			if(validateCoin(coin)) {
-    		if (IntStream.of(Coin.POSSIBLE_VALUES).anyMatch(x -> x == coin.denomination)) {
-    			if(!coinPresentMap.containsKey(coin.denomination)) {
-    			machine.currentAmount=machine.currentAmount+(coin.denomination*coin.count);
-    			resultCoins.add(vendingServiceData.saveCoin(new Coin(machine,coin.denomination, coin.count)));
+    		if (IntStream.of(Coin.POSSIBLE_VALUES).anyMatch(x -> x == coin.getDenomination())) {
+    			if(!coinPresentMap.containsKey(coin.getDenomination())) {
+    			machine.setCurrentAmount(machine.getCurrentAmount()+(coin.getDenomination()*coin.getCount()));
+    			resultCoins.add(vendingServiceData.saveCoin(new Coin(machine,coin.getDenomination(), coin.getCount())));
     			}else {
-    				machine.currentAmount=machine.currentAmount+(coin.denomination*coin.count);
-    				String keySplit[]=coinPresentMap.get(coin.denomination).split(",");
+    				machine.setCurrentAmount(machine.getCurrentAmount()+(coin.getDenomination()*coin.getCount()));
+    				String []keySplit=coinPresentMap.get(coin.getDenomination()).split(",");
     				coinToPersist=vendingServiceData.getOneCoin(Long.valueOf((keySplit[1])));
-    				coinToPersist.count=coinToPersist.count+coin.count;
+    				coinToPersist.setCount(coinToPersist.getCount()+coin.getCount());
     				resultCoins.add(vendingServiceData.saveCoin(coinToPersist));
     			}
     			
@@ -61,10 +65,11 @@ public class VendingUtility {
 	}
 	
 	public static boolean validateCoin(Coin coin) {
-		if(coin.count>=0 && coin.count % 1 == 0) {
-			return true;
+		boolean flag=false;
+		if(coin.getCount()>=0) {
+			flag=true;
 		}
-		return false;
+		return flag;
 	}
 	
 	}

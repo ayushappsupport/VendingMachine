@@ -44,7 +44,7 @@ public class VendingServiceImpl implements IVendingService {
 	 */
 	@Override
 	public List<Coin> addInitialCoins(String machineId, List<Coin> coins) {
-		List<Coin> resultCoins = new ArrayList<Coin>();
+		List<Coin> resultCoins = new ArrayList<>();
 		Machine machine = null;
 		try {
 			Optional<Machine> machineopt = vendingServiceData.findByName(machineId);
@@ -80,22 +80,21 @@ public class VendingServiceImpl implements IVendingService {
 		final boolean[] coinFound = { false };
 		// Increase the amount of coins if the machine already has seen that coin
 		vendingServiceData.findByMachineName(machineId).forEach(machineCoin -> {
-			if (coin.denomination == machineCoin.denomination) {
-				machineCoin.count = machineCoin.count + 1;
-				// coin.setId(machineCoin.getId());
+			if (coin.getDenomination() == machineCoin.getDenomination()) {
+				machineCoin.setCount(machineCoin.getCount() + 1);
 				coinFound[0] = true;
 				vendingServiceData.saveCoin(machineCoin);
 			}
 		});
 
 		// Else add the coin to the repository
-		if (!coinFound[0] && IntStream.of(Coin.POSSIBLE_VALUES).anyMatch(x -> x == coin.denomination)) {
-			vendingServiceData.saveAndFlushCoin((new Coin(machine, coin.denomination, 1)));
+		if (!coinFound[0] && IntStream.of(Coin.POSSIBLE_VALUES).anyMatch(x -> x == coin.getDenomination())) {
+			vendingServiceData.saveAndFlushCoin((new Coin(machine, coin.getDenomination(), 1)));
 			coinFound[0] = true;
 		}
 
 		if (coinFound[0]) {
-			machine.currentAmount += coin.denomination;
+			machine.setCurrentAmount(machine.getCurrentAmount() +coin.getDenomination());
 		}
 
 		vendingServiceData.saveAndFlushMachine(machine);
@@ -116,34 +115,35 @@ public class VendingServiceImpl implements IVendingService {
 		List<Coin> refundCoins = new ArrayList<>();
 		try {
 		final int[] refundTotal = new int[1];
+		Machine machine = new Machine();
 		refundTotal[0] = refund.getRefundAmount();
-		Machine machine = vendingServiceData.findByName(machineId).get();
-		int initialMachineAmount = machine.currentAmount;
-		if (refundTotal[0] > initialMachineAmount) {
-			throw new UserServiceException(VendingConstants.REFUND_ERROR);
-		}else if(refundTotal[0]<=0) {
+		Optional<Machine> mach=vendingServiceData.findByName(machineId);
+		if(mach.isPresent()) {
+		 machine = mach.get();
+		}
+		int initialMachineAmount = machine.getCurrentAmount();
+		if (refundTotal[0] > initialMachineAmount || refundTotal[0]<=0) {
 			throw new UserServiceException(VendingConstants.REFUND_ERROR);
 		}
 		
-		List<Coin> coinsToSave = new ArrayList<Coin>();
+		List<Coin> coinsToSave = new ArrayList<>();
 
 		//
 		for (int value : Coin.POSSIBLE_VALUES) {
 			vendingServiceData.findByMachineName(machineId).forEach(coin -> {
-				if (value == coin.denomination && coin.count > 0 && coin.denomination <= refundTotal[0]) {
-					double max_coins = Math.min(Math.floor(refundTotal[0] / coin.denomination), coin.count);
-					coin.count -= max_coins;
+				if (value == coin.getDenomination() && coin.getCount() > 0 && coin.getDenomination() <= refundTotal[0]) {
+					double maxCoins = Math.min(refundTotal[0] / coin.getDenomination(), coin.getCount());
+					coin.setCount(coin.getCount() -(int)(maxCoins));
 					coinsToSave.add(coin);
-					// this.coinRepository.saveAndFlush(coin);
-					refundCoins.add(new Coin(coin.denomination, (int) max_coins));
-					refundTotal[0] -= (int) max_coins * coin.denomination;
+					refundCoins.add(new Coin(coin.getDenomination(), (int) maxCoins));
+					refundTotal[0] -= (int) maxCoins * coin.getDenomination();
 				}
 			});
 		}
 		if (refundTotal[0] > 0) {
 			throw new UserServiceException(VendingConstants.REFUND_ERROR);
 		} else {
-			machine.currentAmount = machine.currentAmount - refund.getRefundAmount();
+			machine.setCurrentAmount(machine.getCurrentAmount()-refund.getRefundAmount());
 			vendingServiceData.saveCoinBulk(coinsToSave);
 			vendingServiceData.saveMachine(machine);
 		}

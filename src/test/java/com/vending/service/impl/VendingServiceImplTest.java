@@ -3,6 +3,8 @@
  */
 package com.vending.service.impl;
 
+import static org.junit.Assert.assertNotNull;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -44,7 +46,7 @@ public class VendingServiceImplTest {
 	coins=new ArrayList<Coin>();
 	coinsPresent=new ArrayList<Coin>();
 	Machine machine=new Machine();
-	machine.name="1";
+	machine.setName("1");
 	coins.add(new Coin(machine,200, 10));
 	coins.add(new Coin(machine,50, 10));
 	Coin coin1=new Coin(machine,200, 10);
@@ -59,25 +61,25 @@ public class VendingServiceImplTest {
 	public void addInitialCoinsTest() throws Exception {
 		Coin getOneCoin=new Coin();
 		getOneCoin.setId(1L);
-		getOneCoin.denomination=200;
-		getOneCoin.count=10;
+		getOneCoin.setDenomination(200);
+		getOneCoin.setCount(10);
 		Mockito.<Optional<Machine>>when(vendingServiceData.findByName(Mockito.anyString())).thenReturn(Optional.of(machine));
 		Mockito.when(vendingServiceData.findByMachineName(Mockito.any())).thenReturn(coinsPresent);
 		Mockito.when(vendingServiceData.getOneCoin(Mockito.any())).thenReturn(getOneCoin);
 		Mockito.when(vendingServiceData.saveCoin(Mockito.any())).thenReturn(getOneCoin);
 		Mockito.doNothing().when(vendingServiceData).saveMachine(machine);
-		vendingService.addInitialCoins("1", coins);
+		assertNotNull(vendingService.addInitialCoins("1", coins));
 	}
 	
 	@Test
 	public void addCoinsTest() throws Exception {
 		Coin getOneCoin=new Coin();
 		getOneCoin.setId(1L);
-		getOneCoin.denomination=200;
-		getOneCoin.count=10;
+		getOneCoin.setDenomination(200);
+		getOneCoin.setCount(10);
 		Mockito.<Optional<Machine>>when(vendingServiceData.findByName(Mockito.anyString())).thenReturn(Optional.of(machine));
 		Mockito.when(vendingServiceData.findByMachineName(Mockito.any())).thenReturn(coinsPresent);
-		vendingService.addCoin("1", getOneCoin, machine);
+		assertNotNull(vendingService.addCoin("1", getOneCoin, machine));
 	}
 	
 	/*
@@ -100,11 +102,11 @@ public class VendingServiceImplTest {
 	public void addCoinsNewTest() throws Exception {
 		Coin getOneCoin=new Coin();
 		getOneCoin.setId(1L);
-		getOneCoin.denomination=2;
-		getOneCoin.count=10;
+		getOneCoin.setDenomination(2);
+		getOneCoin.setCount(10);
 		Mockito.<Optional<Machine>>when(vendingServiceData.findByName(Mockito.anyString())).thenReturn(Optional.of(machine));
 		Mockito.when(vendingServiceData.findByMachineName(Mockito.any())).thenReturn(coinsPresent);
-		vendingService.addCoin("1", getOneCoin, machine);
+		assertNotNull(vendingService.addCoin("1", getOneCoin, machine));
 	}
 	
 	@Test
@@ -113,12 +115,12 @@ public class VendingServiceImplTest {
 		refund.setRefundAmount(50);
 		Coin getOneCoin=new Coin();
 		getOneCoin.setId(1L);
-		getOneCoin.denomination=2;
-		getOneCoin.count=10;
-		machine.currentAmount=1000;
+		getOneCoin.setDenomination(2);
+		getOneCoin.setCount(10);
+		machine.setCurrentAmount(1000);
 		Mockito.<Optional<Machine>>when(vendingServiceData.findByName(Mockito.anyString())).thenReturn(Optional.of(machine));
 		Mockito.when(vendingServiceData.findByMachineName(Mockito.any())).thenReturn(coinsPresent);
-		vendingService.refundAmount("1", refund);
+		assertNotNull(vendingService.refundAmount("1", refund));
 	}
 	
 	@Test(expected= Exception.class)
@@ -127,11 +129,11 @@ public class VendingServiceImplTest {
 		refund.setRefundAmount(0);
 		Coin getOneCoin=new Coin();
 		getOneCoin.setId(1L);
-		getOneCoin.denomination=2;
-		getOneCoin.count=10;
-		machine.currentAmount=1000;
+		getOneCoin.setDenomination(2);
+		getOneCoin.setCount(10);
+		machine.setCurrentAmount(1000);
 		Mockito.<Optional<Machine>>when(vendingServiceData.findByName(Mockito.anyString())).thenReturn(Optional.of(machine));
-		vendingService.refundAmount("1", refund);
+		assertNotNull(vendingService.refundAmount("1", refund));
 	}
 	@Test(expected= Exception.class)
 	public void refundWhenGreaterThanMachineAmountTest() throws Exception {
@@ -139,11 +141,11 @@ public class VendingServiceImplTest {
 		refund.setRefundAmount(1100);
 		Coin getOneCoin=new Coin();
 		getOneCoin.setId(1L);
-		getOneCoin.denomination=2;
-		getOneCoin.count=10;
-		machine.currentAmount=1000;
+		getOneCoin.setDenomination(2);
+		getOneCoin.setCount(10);
+		machine.setCurrentAmount(1000);
 		Mockito.<Optional<Machine>>when(vendingServiceData.findByName(Mockito.anyString())).thenReturn(Optional.of(machine));
-		vendingService.refundAmount("1", refund);
+		assertNotNull(vendingService.refundAmount("1", refund));
 	}
 	@Test(expected= Exception.class)
 	public void refundInsufficientCoinsTest() throws Exception {
@@ -151,11 +153,11 @@ public class VendingServiceImplTest {
 		refund.setRefundAmount(110);
 		Coin getOneCoin=new Coin();
 		getOneCoin.setId(1L);
-		getOneCoin.denomination=2;
-		getOneCoin.count=10;
-		machine.currentAmount=1000;
+		getOneCoin.setDenomination(2);
+		getOneCoin.setCount(10);
+		machine.setCurrentAmount(1000);
 		Mockito.<Optional<Machine>>when(vendingServiceData.findByName(Mockito.anyString())).thenReturn(Optional.of(machine));
-		vendingService.refundAmount("1", refund);
+		assertNotNull(vendingService.refundAmount("1", refund));
 	}
 	
 }
