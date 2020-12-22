@@ -7,7 +7,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import org.junit.Before;
@@ -75,7 +74,7 @@ public class CoinrestControllerTest {
 	public void getCoinsTest() throws Exception {
 		Mockito.<Optional<Machine>>when(machineRepository.findByName(Mockito.anyString())).thenReturn(Optional.of(machine));
 		Mockito.when(vendingServiceData.findByMachineName(Mockito.any())).thenReturn(new ArrayList<Coin>());
-		 this.mockMvc.perform(MockMvcRequestBuilders.get("/1/coins")
+		 this.mockMvc.perform(MockMvcRequestBuilders.get("/machine/1/coins")
 		           .accept(MediaType.parseMediaType("application/json")))
 		           .andExpect(status().isOk())
 		           .andExpect(content().contentType("application/json"));
@@ -84,7 +83,7 @@ public class CoinrestControllerTest {
 	@Test
 	public void addInitialCoinsTest() throws Exception {
 		Mockito.when(vendingService.addInitialCoins(Mockito.anyString(), Mockito.anyList())).thenReturn(new ArrayList<Coin>());
-		 this.mockMvc.perform(MockMvcRequestBuilders.post("/1/coins/addInitialCoins")
+		 this.mockMvc.perform(MockMvcRequestBuilders.post("/machine/1/coins/addInitialCoins")
 				 	.contentType(MediaType.APPLICATION_JSON)
 				   .content(mapper.writeValueAsString(new ArrayList<Coin>()))
 		           .accept(MediaType.parseMediaType("application/json")))
@@ -98,7 +97,7 @@ public class CoinrestControllerTest {
 		Coin coin=new Coin();
 		coin.denomination=200;
 		Mockito.when(vendingService.addCoin(Mockito.anyString(), Mockito.any(),Mockito.any())).thenReturn(Optional.of(machine));
-		 this.mockMvc.perform(MockMvcRequestBuilders.post("/1/coins/addCoins")
+		 this.mockMvc.perform(MockMvcRequestBuilders.post("/machine/1/coins/addCoins")
 				 	.contentType(MediaType.APPLICATION_JSON)
 				   .content(mapper.writeValueAsString(coin))
 		           .accept(MediaType.parseMediaType("application/json")))
@@ -106,4 +105,16 @@ public class CoinrestControllerTest {
 		           .andExpect(content().contentType("application/json"));
 	}
 	
+	@Test(expected = Exception.class)
+	public void addCoinsNotValidDenominationTest() throws Exception {
+		Mockito.<Optional<Machine>>when(machineRepository.findByName(Mockito.anyString())).thenReturn(Optional.of(machine));
+		Coin coin=new Coin();
+		coin.denomination=135;
+		this.mockMvc.perform(MockMvcRequestBuilders.post("/machine/1/coins/addCoins")
+				 	.contentType(MediaType.APPLICATION_JSON)
+				   .content(mapper.writeValueAsString(coin))
+		           .accept(MediaType.parseMediaType("application/json")))
+		           .andExpect(status().isBadRequest())
+		           .andExpect(content().contentType("application/json"));
+	}
 }

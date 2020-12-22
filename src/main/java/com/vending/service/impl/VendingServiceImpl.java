@@ -59,7 +59,7 @@ public class VendingServiceImpl implements IVendingService {
 			vendingServiceData.saveMachine(machine);
 			
 		} catch (NumberFormatException ex) {
-			throw new UserServiceException("Exception in NumberFormatting");
+			throw new UserServiceException(VendingConstants.NUMBER_FORMATTING_EXCEPTION);
 		} catch (Exception e) {
 			throw new UserServiceException(VendingConstants.UNEXPECTED_ERROR);
 		}
@@ -120,6 +120,8 @@ public class VendingServiceImpl implements IVendingService {
 		Machine machine = vendingServiceData.findByName(machineId).get();
 		int initialMachineAmount = machine.currentAmount;
 		if (refundTotal[0] > initialMachineAmount) {
+			throw new UserServiceException(VendingConstants.REFUND_ERROR);
+		}else if(refundTotal[0]<=0) {
 			throw new UserServiceException(VendingConstants.REFUND_ERROR);
 		}
 		
