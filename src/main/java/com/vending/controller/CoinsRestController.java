@@ -121,7 +121,7 @@ public class CoinsRestController {
 	 */
 	@PostMapping(value = VendingConstants.REFUND)
 	public ResponseEntity<?> refund(@PathVariable String machineId, @RequestBody RefundAmount refund) throws UserServiceException, Exception {
-		this.validateMachine(machineId);
+		validateMachine(machineId);
 		return new ResponseEntity<>(vendingService.refundAmount(machineId, refund), HttpStatus.CREATED);
 	}
 

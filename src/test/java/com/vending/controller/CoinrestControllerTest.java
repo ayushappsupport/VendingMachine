@@ -26,6 +26,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vending.entity.Coin;
 import com.vending.entity.Machine;
+import com.vending.entity.RefundAmount;
 import com.vending.repository.CoinRepository;
 import com.vending.repository.MachineRepository;
 import com.vending.service.impl.VendingServiceDataImpl;
@@ -116,5 +117,18 @@ public class CoinrestControllerTest {
 		           .accept(MediaType.parseMediaType("application/json")))
 		           .andExpect(status().isBadRequest())
 		           .andExpect(content().contentType("application/json"));
+	}
+	
+	@Test
+	public void refundTest() throws Exception {
+		Mockito.<Optional<Machine>>when(machineRepository.findByName(Mockito.anyString())).thenReturn(Optional.of(machine));
+		Mockito.when(vendingService.refundAmount(Mockito.any(), Mockito.any())).thenReturn(new ArrayList<Coin>());
+		this.mockMvc.perform(MockMvcRequestBuilders.post("/machine/1/coins/refund")
+			 	.contentType(MediaType.APPLICATION_JSON)
+			   .content(mapper.writeValueAsString(new RefundAmount()))
+	           .accept(MediaType.parseMediaType("application/json")))
+	           .andExpect(status().isCreated())
+	           .andExpect(content().contentType("application/json"));
+	
 	}
 }
