@@ -132,11 +132,6 @@ public class CoinsRestController {
 	 */
 	private void validateMachine(String machineId) throws MachineNotFoundException {
 		logger.debug("Entering into method validateMachine for machine");
-		try {
-			machineRepository.findByName(machineId);
-		}
-		catch(MachineNotFoundException me) {
-			throw new MachineNotFoundException(machineId);
-		}
+		machineRepository.findByName(machineId).orElseThrow(() -> new MachineNotFoundException(machineId));
 	}
 }
