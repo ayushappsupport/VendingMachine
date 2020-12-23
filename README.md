@@ -7,35 +7,30 @@ POST's may require you to download a web browser plug in for example POSTMAN.
 
 The following actions can be performed
 
+
 ```
-localhost:8080 - GET: Index, view all Vending Machines in the system with all of the data
-                 POST: Add a new vending machine to the system
-```
-```
-localhost:8080/{Vending Machine Name} - GET: View the details for a specific vending machine
+localhost:8080/machine/{machineId}/coins - GET: View all the coins that vending machine currently has stored
 ```
 ```
-localhost:8080/{Vending Machine Name}/coins - GET: View all the coins that vending machine currently has stored
-                                              POST: Put a coin in the machine. (Amount is ignored as you can only put in one coin at a time)
+localhost:8080/machine/{machineId}/coins/addInitialCoins - POST: Initialize the vending machine with the coins
 ```
 ```
-localhost:8080/{Vending Machine Name}/coins/{coin value} - GET: View how many of a specific value coin that machine has
+localhost:8080/machine/{machineId}/coins/addCoins - POST: Add a Single Coin in the Vending Machine
 ```
+
 ```
-localhost:8080/{Vending Machine Name}/coins/refund - GET: Returns you coins of equal value to the amount that was put into the machine (Uses up larger coins first)
+localhost:8080/machine/{machineId}/coins/refund - POST: Returns you coins of equal value to the amount that was put into the machine (Uses up larger coins first)
 ```
-```
-localhost:8080/{Vending Machine Name}/products/ - GET: List all the products for that machine
-                                                  POST: Add a new product to the vending machine
-```
-```
-localhost:8080/{Vending Machine Name}/products/{product id} - GET: View the details for a specific product
-```
-```
-localhost:8080/{Vending Machine Name}/products/{product id}/buy - GET: Buy 1 of that particular item deducting that amount of money from your current amount.
-```
+
+Swagger Documentation: http://localhost:8080/swagger-ui.html
+
+Health Check : http://localhost:8080/actuator/health
+
+All the Details to run the API either through postman or interactive test suite  are mentioned in the document "Vending_Machine_RunThrough_Document".
+Please refer to the document.
 
 Notes:
 
-When testing POST ensure the header "Content-Type" is set to "application/json; charset=UTF-8".
-Initially there are two Vending Machines in the system their names are "Vending machine 1" and "Vending machine 2".
+When testing POST ensure the header "Content-Type" is set to "application/json
+
+Initially there is only 1 Vending Machine which we are giving in the Request of every API.
