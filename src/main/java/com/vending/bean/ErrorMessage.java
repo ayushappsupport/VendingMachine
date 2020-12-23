@@ -4,13 +4,12 @@ import java.util.Date;
 
 public class ErrorMessage {
 
-	
 	private Date errorTime;
 	private String message;
-	
-	public ErrorMessage(Date errorTime,String message) {
-		this.errorTime=errorTime;
-		this.message=message;
+
+	public ErrorMessage(Date errorTime, String message) {
+		this.errorTime = errorTime;
+		this.message = message;
 	}
 
 	public Date getErrorTime() {
@@ -28,6 +27,5 @@ public class ErrorMessage {
 	public void setMessage(String message) {
 		this.message = message;
 	}
-	
-	
+
 }

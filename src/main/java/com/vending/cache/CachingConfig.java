@@ -15,13 +15,10 @@ import com.vending.constants.VendingConstants;
 @EnableCaching
 public class CachingConfig {
 
-	
 	@Bean
-    public CacheManager cacheManager() {
-        SimpleCacheManager cacheManager = new SimpleCacheManager();
-        cacheManager.setCaches(Arrays.asList(
-          new ConcurrentMapCache(VendingConstants.CACHE_VENDINGMACHINE)
-          ));
-        return cacheManager;
-    }
+	public CacheManager cacheManager() {
+		SimpleCacheManager cacheManager = new SimpleCacheManager();
+		cacheManager.setCaches(Arrays.asList(new ConcurrentMapCache(VendingConstants.CACHE_VENDINGMACHINE)));
+		return cacheManager;
+	}
 }

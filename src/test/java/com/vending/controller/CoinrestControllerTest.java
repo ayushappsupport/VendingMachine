@@ -42,93 +42,91 @@ import com.vending.service.impl.VendingServiceImpl;
 @AutoConfigureMockMvc
 public class CoinrestControllerTest {
 
-	
 	@InjectMocks
 	private CoinsRestController coinsRestController;
-	
+
 	@Mock
 	private MachineRepository machineRepository;
-	
+
 	@Mock
 	private CoinRepository coinRepository;
-	
+
 	@Mock
 	private VendingServiceDataImpl vendingServiceData;
-	
+
 	@Mock
 	private VendingServiceImpl vendingService;
-	
+
 	private Machine machine = new Machine();
-	
+
 	private MockMvc mockMvc;
-	
-	
-	private ObjectMapper mapper=new ObjectMapper();
-	 
-	 @Before
-	    public void setUp() {
-	     this.mockMvc = MockMvcBuilders.standaloneSetup(coinsRestController).build();
-	     //ReflectionTestUtils.setField(CoinsRestController.class, "vendingService", new VendingServiceImpl());
-	 }
-	
+
+	private ObjectMapper mapper = new ObjectMapper();
+
+	@Before
+	public void setUp() {
+		this.mockMvc = MockMvcBuilders.standaloneSetup(coinsRestController).build();
+	}
+
 	@Test
 	public void getCoinsTest() throws Exception {
-		Mockito.<Optional<Machine>>when(machineRepository.findByName(Mockito.anyString())).thenReturn(Optional.of(machine));
+		Mockito.<Optional<Machine>>when(machineRepository.findByName(Mockito.anyString()))
+				.thenReturn(Optional.of(machine));
 		Mockito.when(vendingServiceData.findByMachineName(Mockito.any())).thenReturn(new ArrayList<Coin>());
-		 this.mockMvc.perform(MockMvcRequestBuilders.get("/machine/1/coins")
-		           .accept(MediaType.parseMediaType("application/json")))
-		           .andExpect(status().isOk())
-		           .andExpect(content().contentType("application/json"));
+		this.mockMvc
+				.perform(MockMvcRequestBuilders.get("/machine/1/coins")
+						.accept(MediaType.parseMediaType("application/json")))
+				.andExpect(status().isOk()).andExpect(content().contentType("application/json"));
 	}
-	
+
 	@Test
 	public void addInitialCoinsTest() throws Exception {
-		Mockito.when(vendingService.addInitialCoins(Mockito.anyString(), Mockito.anyList())).thenReturn(new ArrayList<Coin>());
-		 this.mockMvc.perform(MockMvcRequestBuilders.post("/machine/1/coins/addInitialCoins")
-				 	.contentType(MediaType.APPLICATION_JSON)
-				   .content(mapper.writeValueAsString(new ArrayList<Coin>()))
-		           .accept(MediaType.parseMediaType("application/json")))
-		           .andExpect(status().isCreated())
-		           .andExpect(content().contentType("application/json"));
+		Mockito.when(vendingService.addInitialCoins(Mockito.anyString(), Mockito.anyList()))
+				.thenReturn(new ArrayList<Coin>());
+		this.mockMvc.perform(MockMvcRequestBuilders.post("/machine/1/coins/addInitialCoins")
+				.contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(new ArrayList<Coin>()))
+				.accept(MediaType.parseMediaType("application/json"))).andExpect(status().isCreated())
+				.andExpect(content().contentType("application/json"));
 	}
-	
+
 	@Test
 	public void addCoinsTest() throws Exception {
-		Mockito.<Optional<Machine>>when(machineRepository.findByName(Mockito.anyString())).thenReturn(Optional.of(machine));
-		Coin coin=new Coin();
+		Mockito.<Optional<Machine>>when(machineRepository.findByName(Mockito.anyString()))
+				.thenReturn(Optional.of(machine));
+		Coin coin = new Coin();
 		coin.setDenomination(200);
-		Mockito.when(vendingService.addCoin(Mockito.anyString(), Mockito.any(),Mockito.any())).thenReturn(Optional.of(machine));
-		 this.mockMvc.perform(MockMvcRequestBuilders.post("/machine/1/coins/addCoins")
-				 	.contentType(MediaType.APPLICATION_JSON)
-				   .content(mapper.writeValueAsString(coin))
-		           .accept(MediaType.parseMediaType("application/json")))
-		           .andExpect(status().isOk())
-		           .andExpect(content().contentType("application/json"));
+		Mockito.when(vendingService.addCoin(Mockito.anyString(), Mockito.any(), Mockito.any()))
+				.thenReturn(Optional.of(machine));
+		this.mockMvc
+				.perform(MockMvcRequestBuilders.post("/machine/1/coins/addCoins")
+						.contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(coin))
+						.accept(MediaType.parseMediaType("application/json")))
+				.andExpect(status().isOk()).andExpect(content().contentType("application/json"));
 	}
-	
+
 	@Test(expected = Exception.class)
 	public void addCoinsNotValidDenominationTest() throws Exception {
-		Mockito.<Optional<Machine>>when(machineRepository.findByName(Mockito.anyString())).thenReturn(Optional.of(machine));
-		Coin coin=new Coin();
+		Mockito.<Optional<Machine>>when(machineRepository.findByName(Mockito.anyString()))
+				.thenReturn(Optional.of(machine));
+		Coin coin = new Coin();
 		coin.setDenomination(135);
-		this.mockMvc.perform(MockMvcRequestBuilders.post("/machine/1/coins/addCoins")
-				 	.contentType(MediaType.APPLICATION_JSON)
-				   .content(mapper.writeValueAsString(coin))
-		           .accept(MediaType.parseMediaType("application/json")))
-		           .andExpect(status().isBadRequest())
-		           .andExpect(content().contentType("application/json"));
+		this.mockMvc
+				.perform(MockMvcRequestBuilders.post("/machine/1/coins/addCoins")
+						.contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(coin))
+						.accept(MediaType.parseMediaType("application/json")))
+				.andExpect(status().isBadRequest()).andExpect(content().contentType("application/json"));
 	}
-	
+
 	@Test
 	public void refundTest() throws Exception {
-		Mockito.<Optional<Machine>>when(machineRepository.findByName(Mockito.anyString())).thenReturn(Optional.of(machine));
+		Mockito.<Optional<Machine>>when(machineRepository.findByName(Mockito.anyString()))
+				.thenReturn(Optional.of(machine));
 		Mockito.when(vendingService.refundAmount(Mockito.any(), Mockito.any())).thenReturn(new ArrayList<Coin>());
-		this.mockMvc.perform(MockMvcRequestBuilders.post("/machine/1/coins/refund")
-			 	.contentType(MediaType.APPLICATION_JSON)
-			   .content(mapper.writeValueAsString(new RefundAmount()))
-	           .accept(MediaType.parseMediaType("application/json")))
-	           .andExpect(status().isCreated())
-	           .andExpect(content().contentType("application/json"));
-	
+		this.mockMvc
+				.perform(MockMvcRequestBuilders.post("/machine/1/coins/refund").contentType(MediaType.APPLICATION_JSON)
+						.content(mapper.writeValueAsString(new RefundAmount()))
+						.accept(MediaType.parseMediaType("application/json")))
+				.andExpect(status().isCreated()).andExpect(content().contentType("application/json"));
+
 	}
 }

@@ -35,7 +35,7 @@ import com.vending.service.IVendingServiceData;
  * @author ayush.a.mittal
  *
  */
-@CrossOrigin(origins = {"http://localhost:3000"})
+@CrossOrigin(origins = { "http://localhost:3000" })
 @RestController
 @RequestMapping(VendingConstants.REQUEST_MAPPING)
 public class CoinsRestController {
@@ -45,6 +45,7 @@ public class CoinsRestController {
 	private IVendingService vendingService;
 	private IVendingServiceData vendingServiceData;
 	Logger logger = LoggerFactory.getLogger(CoinsRestController.class);
+
 	/**
 	 * To inject the bean
 	 * 
@@ -54,10 +55,11 @@ public class CoinsRestController {
 	 * @param vendingServiceData
 	 */
 	@Autowired
-	CoinsRestController(MachineRepository machineRepository, CoinRepository coinRepository,IVendingService vendingService,IVendingServiceData vendingServiceData) {
+	CoinsRestController(MachineRepository machineRepository, CoinRepository coinRepository,
+			IVendingService vendingService, IVendingServiceData vendingServiceData) {
 		this.machineRepository = machineRepository;
-		this.vendingService=vendingService;
-		this.vendingServiceData=vendingServiceData;
+		this.vendingService = vendingService;
+		this.vendingServiceData = vendingServiceData;
 	}
 
 	/**
@@ -72,7 +74,7 @@ public class CoinsRestController {
 		validateMachine(machineId);
 		logger.debug("Exiting from GET Method of coins");
 		return vendingServiceData.findByMachineName(machineId);
-		
+
 	}
 
 	/**
@@ -86,7 +88,7 @@ public class CoinsRestController {
 	public Optional<?> addCoin(@PathVariable String machineId, @RequestBody Coin coin) throws Exception {
 		logger.debug("Entering into POST Method of adding coins in the machine");
 		validateMachine(machineId);
-		if(!IntStream.of(Coin.POSSIBLE_VALUES).anyMatch(x -> x == coin.getDenomination())) {
+		if (!IntStream.of(Coin.POSSIBLE_VALUES).anyMatch(x -> x == coin.getDenomination())) {
 			throw new BadRequestException(VendingConstants.NOT_A_VALID_DENOMINATION);
 		}
 		return machineRepository.findByName(machineId).map(machine -> {
@@ -106,7 +108,7 @@ public class CoinsRestController {
 	 * @return
 	 */
 	@PostMapping(value = VendingConstants.ADD_INITIAL_COINS)
-	public ResponseEntity<?> addInitialCoin(@PathVariable String machineId,@Validated @RequestBody List<Coin> coins) {
+	public ResponseEntity<?> addInitialCoin(@PathVariable String machineId, @Validated @RequestBody List<Coin> coins) {
 		logger.debug("Entering into POST Method of setting up Inital coins in the machine");
 		return new ResponseEntity<>(vendingService.addInitialCoins(machineId, coins), HttpStatus.CREATED);
 	}
@@ -116,11 +118,12 @@ public class CoinsRestController {
 	 *
 	 * @param machineId machine name
 	 * @return the list of coins that have been returned
-	 * @throws Exception 
-	 * @throws UserServiceException 
+	 * @throws Exception
+	 * @throws UserServiceException
 	 */
 	@PostMapping(value = VendingConstants.REFUND)
-	public ResponseEntity<?> refund(@PathVariable String machineId, @RequestBody RefundAmount refund) throws UserServiceException, Exception {
+	public ResponseEntity<?> refund(@PathVariable String machineId, @RequestBody RefundAmount refund)
+			throws UserServiceException, Exception {
 		validateMachine(machineId);
 		return new ResponseEntity<>(vendingService.refundAmount(machineId, refund), HttpStatus.CREATED);
 	}

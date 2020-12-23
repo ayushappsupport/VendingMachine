@@ -1,20 +1,22 @@
 package com.vending.repository;
 
-import com.vending.entity.Coin;
+import java.util.Collection;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.Collection;
+import com.vending.entity.Coin;
+
 /**
  * 
  * @author ayush.a.mittal
  *
  */
 public interface CoinRepository extends JpaRepository<Coin, Long> {
-    /**
-     * Find all coins in a given machine
-     *
-     * @param name
-     * @return
-     */
-    Collection<Coin> findByMachineName(String name);
+	/**
+	 * Find all coins in a given machine
+	 *
+	 * @param name
+	 * @return
+	 */
+	Collection<Coin> findByMachineName(String name);
 }

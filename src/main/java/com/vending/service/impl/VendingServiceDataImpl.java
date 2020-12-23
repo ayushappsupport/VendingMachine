@@ -25,10 +25,10 @@ import com.vending.service.IVendingServiceData;
  */
 @Component
 public class VendingServiceDataImpl implements IVendingServiceData {
-	
+
 	@Autowired
 	private CoinRepository coinRepo;
-	
+
 	@Autowired
 	private MachineRepository machineRepo;
 
@@ -51,39 +51,39 @@ public class VendingServiceDataImpl implements IVendingServiceData {
 	@Override
 	public Coin saveCoin(Coin coin) {
 		return coinRepo.save(coin);
-		
+
 	}
 
 	@Override
-	@CacheEvict(value=VendingConstants.CACHE_VENDINGMACHINE, key="#machine.name")
+	@CacheEvict(value = VendingConstants.CACHE_VENDINGMACHINE, key = "#machine.name")
 	public void saveMachine(Machine machine) {
 		machineRepo.save(machine);
-		
+
 	}
 
 	@Override
 	public void saveAndFlushCoin(Coin coin) {
 		coinRepo.saveAndFlush(coin);
-		
+
 	}
 
 	@Override
-	@CacheEvict(value=VendingConstants.CACHE_VENDINGMACHINE, key="#machine.name")
+	@CacheEvict(value = VendingConstants.CACHE_VENDINGMACHINE, key = "#machine.name")
 	public void saveAndFlushMachine(Machine machine) {
 		machineRepo.saveAndFlush(machine);
-		
+
 	}
 
 	@Override
 	public void saveCoinBulk(List<Coin> coinsToSave) {
 		coinRepo.saveAll(coinsToSave);
-		
+
 	}
 
 	@Override
 	public Coin getOneCoin(Long id) {
-		Optional<Coin> coin=coinRepo.findById(id);
-		if(coin.isPresent()) {
+		Optional<Coin> coin = coinRepo.findById(id);
+		if (coin.isPresent()) {
 			return coin.get();
 		}
 		return null;

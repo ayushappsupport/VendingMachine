@@ -23,20 +23,14 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableSwagger2
 public class SpringFoxConfig {
 	@Bean
-    public Docket apiDocket() {
-        return new Docket(DocumentationType.SWAGGER_2)
-                .select()
-                .apis(RequestHandlerSelectors.any())
-                .paths(paths())
-                .build();
-    }
-	
+	public Docket apiDocket() {
+		return new Docket(DocumentationType.SWAGGER_2).select().apis(RequestHandlerSelectors.any()).paths(paths())
+				.build();
+	}
+
 	// Only select apis that matches the given Predicates.
-    private Predicate<String> paths() {
-    	// Match all paths except /error
-        return Predicates.and(
-        	PathSelectors.regex("/.*"), 
-        	Predicates.not(PathSelectors.regex("/error.*"))
-        );
-    }
+	private Predicate<String> paths() {
+		// Match all paths except /error
+		return Predicates.and(PathSelectors.regex("/.*"), Predicates.not(PathSelectors.regex("/error.*")));
+	}
 }

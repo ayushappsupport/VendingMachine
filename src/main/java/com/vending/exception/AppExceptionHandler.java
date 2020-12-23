@@ -14,30 +14,33 @@ import com.vending.bean.ErrorMessage;
 @ControllerAdvice
 public class AppExceptionHandler extends ResponseEntityExceptionHandler {
 
-	@ExceptionHandler(value = {Exception.class})
-	public ResponseEntity<Object> handleAnyException(Exception ex,WebRequest request){
-		String errormsgDescription=ex.getLocalizedMessage();
-		if(errormsgDescription==null) errormsgDescription=ex.toString();
-		
-		ErrorMessage msg=new ErrorMessage(new Date(), errormsgDescription);
-		return new ResponseEntity<>(msg,HttpStatus.INTERNAL_SERVER_ERROR);
+	@ExceptionHandler(value = { Exception.class })
+	public ResponseEntity<Object> handleAnyException(Exception ex, WebRequest request) {
+		String errormsgDescription = ex.getLocalizedMessage();
+		if (errormsgDescription == null)
+			errormsgDescription = ex.toString();
+
+		ErrorMessage msg = new ErrorMessage(new Date(), errormsgDescription);
+		return new ResponseEntity<>(msg, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
-	
-	@ExceptionHandler(value = {UserServiceException.class})
-	public ResponseEntity<Object> handleUserServiceException(UserServiceException ex,WebRequest request){
-		String errormsgDescription=ex.getLocalizedMessage();
-		if(errormsgDescription==null) errormsgDescription=ex.toString();
-		
-		ErrorMessage msg=new ErrorMessage(new Date(), errormsgDescription);
-		return new ResponseEntity<>(msg,HttpStatus.INTERNAL_SERVER_ERROR);
+
+	@ExceptionHandler(value = { UserServiceException.class })
+	public ResponseEntity<Object> handleUserServiceException(UserServiceException ex, WebRequest request) {
+		String errormsgDescription = ex.getLocalizedMessage();
+		if (errormsgDescription == null)
+			errormsgDescription = ex.toString();
+
+		ErrorMessage msg = new ErrorMessage(new Date(), errormsgDescription);
+		return new ResponseEntity<>(msg, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
-	
-	@ExceptionHandler(value = {BadRequestException.class})
-	public ResponseEntity<Object> handleBadRequestException(BadRequestException ex,WebRequest request){
-		String errormsgDescription=ex.getLocalizedMessage();
-		if(errormsgDescription==null) errormsgDescription=ex.toString();
-		
-		ErrorMessage msg=new ErrorMessage(new Date(), errormsgDescription);
-		return new ResponseEntity<>(msg,HttpStatus.BAD_REQUEST);
+
+	@ExceptionHandler(value = { BadRequestException.class })
+	public ResponseEntity<Object> handleBadRequestException(BadRequestException ex, WebRequest request) {
+		String errormsgDescription = ex.getLocalizedMessage();
+		if (errormsgDescription == null)
+			errormsgDescription = ex.toString();
+
+		ErrorMessage msg = new ErrorMessage(new Date(), errormsgDescription);
+		return new ResponseEntity<>(msg, HttpStatus.BAD_REQUEST);
 	}
 }

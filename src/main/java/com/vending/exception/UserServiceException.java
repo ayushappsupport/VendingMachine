@@ -1,7 +1,7 @@
 package com.vending.exception;
 
 public class UserServiceException extends RuntimeException {
-	
+
 	/**
 	 * 
 	 */

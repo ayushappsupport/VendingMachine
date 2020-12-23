@@ -43,7 +43,10 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-
+		<dependency>
+		  <groupId>org.springframework.boot</groupId>
+		  <artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
@@ -86,8 +89,11 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.22.0</version>
                 <configuration>
                      <include>${project.basedir}/src/test/java</include>
+                     <argLine>-Xmx1G</argLine>
+                     
                 </configuration>
             </plugin>
             <plugin>
@@ -111,7 +117,25 @@
         </execution>
     </executions>
             </plugin>
-        
+        <plugin>
+   <groupId>org.jacoco</groupId>
+    <artifactId>jacoco-maven-plugin</artifactId>
+    <version>0.8.4</version>
+    <configuration>
+                <dataFile>${basedir}/target/coverage-reports/jacoco-unit.exec</dataFile>
+            </configuration>
+            <executions>
+                <execution>
+                    <id>jacoco-initialize</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                        <configuration>
+                            <propertyName>jacoco.argLine</propertyName>
+                        </configuration>
+                </execution>
+            </executions>
+</plugin>
            
 		</plugins>
 	</build>
