@@ -26,7 +26,7 @@ Swagger Documentation: http://localhost:8080/swagger-ui.html
 
 Health Check : http://localhost:8080/actuator/health
 
-All the Details to run the API either through postman or interactive test suite  are mentioned in the document "Vending_Machine_RunThrough_Document".
+All the Details to run the API either through postman or interactive test suite  are mentioned in the document **"Vending_Machine_RunThrough_Document.docx"**.
 Please refer to the document.
 
 Notes:
