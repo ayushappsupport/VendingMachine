@@ -1,7 +1,9 @@
-# (Fake) Vending Machine API
+# Vending Machine API
 
-I have implemented a REST API for Vending Machines using Java Spring. I used a REST API with JSON as this is an recognised standard of API. The API can be tested in a normal web browser,
-POST's may require you to download a web browser plugin for example POSTMAN. 
+I have implemented a REST API for Vending Machines Change Component using Java Spring. I used a REST API with JSON as this is an recognised standard of API. The API can be tested in a normal web browser,
+POST's may require you to download a web browser plug in for example POSTMAN. 
+
+
 
 The following actions can be performed
 

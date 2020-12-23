@@ -98,7 +98,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\"refundAmount\":3000}",
+					"raw": "{\"refundamountvalue\":100}",
 					"options": {
 						"raw": {
 							"language": "json"
